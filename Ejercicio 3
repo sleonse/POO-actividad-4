@@ -1,0 +1,54 @@
+import tkinter as tk
+from tkinter import messagebox
+import math
+class CalculosNumericos:
+  def __init__(self, ventana):
+      self.ventana= ventana
+      self.ventana.title("Calculos Numéricos")
+
+      tk.Label(ventana, text="Cálculos numéricos", font=("Helvetica", 12, "italic")).grid(row=0, column= 0, padx= 10, pady = 10)
+      tk.Label(ventana, text="Ingrese Numero: ").grid(row=1, column=0, padx= 10, pady=10)
+      self.numero = tk.Entry(ventana)
+      self.numero.grid(row=1,column=1, padx= 10, pady= 10)
+      tk.Button(ventana, text="calcular ln", command= self.calcularLn).grid(row =2, column= 1, padx = 10, pady= 10)
+      self.resultado = tk.Label(ventana, text="El logaritmo neperiano es: ")
+      self.resultado.grid(row= 2, column=0, columnspan= 1)
+
+
+
+      tk.Label(ventana, text="Ingrese Número: ").grid(row=3, column=0, padx=10,pady=10)
+      self.numero2 = tk.Entry(ventana)
+      self.numero2.grid(row=3, column=1, padx=10, pady=10)
+      tk.Button(ventana, text="Calcular Raíz", command=self.CalcularRaiz).grid(row=4, column=1, padx= 10, pady= 10)
+      self.raiz = tk.Label(ventana, text="La raíz es: ")
+      self.raiz.grid(row=4, column=0,columnspan=1)
+      tk.Button(ventana, text="Limpiar campos", command=self.limpiarCampos).grid(row=5, column=0, padx=10, pady=10)
+  def calcularLn(self):
+    try:
+      self.valor = float(self.numero.get())
+      if self.valor <= 0:
+        raise ValueError("El número tiene que ser positivo")
+      resultado = math.log(self.valor)
+      self.resultado.config(text=f"El logaritmo neperiano de {int(self.valor)} es: {round(resultado, 2)}")
+    #   messagebox.showinfo("Resultado", f"El logaritmo neperiano de {valor} es {round(resultado, 4)}")
+    except:
+       messagebox.showerror("Error","Ingrese valores correctos")
+  def CalcularRaiz(self):
+     try:
+        valor = float(self.numero2.get())
+        if valor < 0:
+           raise ValueError("El número tiene que ser positivo")
+        raiz = math.sqrt(valor)
+        self.raiz.config(text=f"La raíz de {int(valor)} es: {round(raiz,2)}")
+        # messagebox.showinfo("Resultado", f"La raíz cuadrada de {valor} es {round(resultado, 4)}")
+     except:
+        messagebox.showerror("Error","Ingrese valores correctos")
+  def limpiarCampos(self):
+    self.numero.delete(0, tk.END)
+    self.numero2.delete(0, tk.END)
+
+if __name__ == "__main__":
+    ventana = tk.Tk()
+    app = CalculosNumericos(ventana)
+    print()
+    ventana.mainloop()
