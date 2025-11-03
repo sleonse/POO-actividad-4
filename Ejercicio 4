@@ -1,0 +1,206 @@
+def campo(str):
+        if not str.strip():
+            raise ValueError(f'No deben haber campos vacios')
+        if len(str) > 20:
+            raise ValueError(f'Los campos exceden el maximo de digitos')
+        for caracter in str:
+            if caracter.isdigit():
+                raise ValueError(f'Los campos no pueden tener digitos')
+        return str
+
+
+class EquipoMaraton:
+    def __init__(self, name, university, language):
+        self.name = name
+        self.university = university
+        self.language = language
+        self.developers = []
+
+
+
+    def lleno(self):
+        return len(self.developers) == 3
+
+    def anadir_programador(self, new_dev):
+        if self.lleno():
+            raise ValueError(f'El equipo ya se encuentra lleno')
+        else:
+            self.developers.append(new_dev)
+
+
+
+class Programador(EquipoMaraton):
+    def __init__(self, name, second_name):
+        self.name = name
+        self.second_name = second_name
+
+import tkinter as interfaz
+
+class Interfaz:
+    def __init__(self):
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.geometry("700x500")
+        self.crear_equipo = interfaz.Label(self.ventana_principal, text = 'Crear nuevo equipo')
+        self.crear_equipo.grid(row = 0, column = 1, padx = 5, pady = 5)
+        self.ventana_principal.columnconfigure(2, minsize=60)
+        self.equipos = []
+        self.ventana_principal.resizable(False, False)
+
+        #  Textos al lado de las entradas
+        self.nombre_nuevo_equipo = interfaz.Label(self.ventana_principal, text = 'Nombre:')
+        self.nombre_nuevo_equipo.grid(row = 1, column = 0, padx = 5, pady = 5)
+        self.universidad_nuevo_equipo = interfaz.Label(self.ventana_principal, text = 'Universidad:')
+        self.universidad_nuevo_equipo.grid(row = 2, column = 0, padx = 5, pady = 5)
+        self.language_nuevo_equipo = interfaz.Label(self.ventana_principal, text = 'Lenguaje:')
+        self.language_nuevo_equipo.grid(row = 3, column = 0, padx = 5, pady = 5)
+
+
+        # entradas
+        self.entrada_nombre = interfaz.Entry(self.ventana_principal)
+        self.entrada_nombre.grid(row = 1, column = 1, padx = 5, pady = 5)
+        self.entrada_universidad = interfaz.Entry(self.ventana_principal)
+        self.entrada_universidad.grid(row = 2, column = 1, padx = 5, pady = 5)
+        self.entrada_lenguaje = interfaz.Entry(self.ventana_principal)
+        self.entrada_lenguaje.grid(row = 3, column = 1, padx = 5, pady = 5)
+
+
+        #Boton crear equipo
+        self.boton_crear_equipo = interfaz.Button(self.ventana_principal, text = 'Crear equipo', command = self.newteam)
+        self.boton_crear_equipo.grid(row = 4, column = 1, padx = 5, pady = 5)
+        self.estado_crear_equipo = interfaz.Label(self.ventana_principal, width=35)
+        self.estado_crear_equipo.grid(row = 5, column = 1, padx = 5, pady = 5)
+
+
+
+        #seleccionar equipo
+        self.seleccionar_equipo = interfaz.Label(self.ventana_principal, text = 'Seleccionar equipo')
+        self.seleccionar_equipo.grid(row = 0, column = 3, padx = 5, pady = 5)
+        self.lista_equipos = interfaz.Listbox(self.ventana_principal, exportselection=0)
+        self.lista_equipos.grid(row = 1, rowspan = 4, column = 3 , padx = 5, pady = '5')
+        self.lista_equipos.bind("<<ListboxSelect>>", self.mostrar_equipo)
+        self.datos_equipo = interfaz.Label(self.ventana_principal)
+        self.datos_equipo.grid(row = 0, column = 4, padx = 5, pady = 5)
+
+
+        self.mostrar_nombre = interfaz.Label(self.ventana_principal)
+        self.mostrar_nombre.grid(row = 1, column = 4, padx = 5, pady = 5, sticky="w")
+        self.mostrar_universidad = interfaz.Label(self.ventana_principal)
+        self.mostrar_universidad.grid(row = 2, column = 4, padx = 5, pady = 5, sticky="w")
+        self.mostrar_lenguaje = interfaz.Label(self.ventana_principal)
+        self.mostrar_lenguaje.grid(row = 3, column = 4, padx = 5, pady = 5, sticky="w")
+        self.mostrar_integrantes = interfaz.Label(self.ventana_principal)           #numero integrantes
+        self.mostrar_integrantes.grid(row = 4, column = 4, padx = 5, pady = 5, sticky="w")
+
+        self.integrantes = interfaz.Label(self.ventana_principal)
+        self.integrantes.grid(row = 5, column = 3, columnspan = 3, padx = 5, pady = 5, sticky = 'w')
+        self.primerint = interfaz.Label(self.ventana_principal)
+        self.primerint.grid(row = 6, column = 3, columnspan = 3, padx = 5, pady = 5, sticky = 'w')
+        self.segundoint = interfaz.Label(self.ventana_principal)
+        self.segundoint.grid(row = 7, column = 3, columnspan = 3, padx = 5, pady = 5, sticky = 'w')
+        self.tercerint = interfaz.Label(self.ventana_principal)
+        self.tercerint.grid(row = 8, column = 3, columnspan = 3, padx = 5, pady = 5, sticky = 'w')
+
+        self.frame_anadir = interfaz.Frame(self.ventana_principal)
+        self.texto_anadir = interfaz.Label(self.frame_anadir, text = 'Añadir integrante')
+        self.texto_anadir.grid(row = 0, column = 0, columnspan = 2, padx = 5, pady = 5, sticky = 'n')
+
+        self.texto_name = interfaz.Label(self.frame_anadir, text = 'Nombre:')
+        self.texto_name.grid(row = 1, column = 0, padx = 5, pady = 5, sticky = 'w')
+
+        self.entry_name = interfaz.Entry(self.frame_anadir)
+        self.entry_name.grid(row = 1, column = 1, columnspan = 2, padx = 5, pady = 5)
+
+        self.text_apellido = interfaz.Label(self.frame_anadir, text = 'Apellido:')
+        self.text_apellido.grid(row = 2, column = 0, padx = 5, pady = 5, sticky = 'w' )
+
+        self.entry_apellido = interfaz.Entry(self.frame_anadir)
+        self.entry_apellido.grid(row = 2, column = 1, columnspan = 2, padx = 5, pady = 5 )
+
+        self.boton_anadir = interfaz.Button(self.frame_anadir, text = 'Añadir', command = self.anadir_integrante)
+        self.boton_anadir.grid(row = 3, column = 0, columnspan = 2, padx = 5, pady = 5)
+
+        self.estado_anadir = interfaz.Label(self.frame_anadir, width = 33)
+        self.estado_anadir.grid(row = 4, column = 0, columnspan = 2, padx = 5, pady = 5 )
+
+        self.ventana_principal.mainloop()
+
+    def newteam(self):
+        try:
+            nombre = campo(self.entrada_nombre.get())
+            universidad = campo(self.entrada_universidad.get())
+            lenguaje = campo(self.entrada_lenguaje.get())
+
+            new = EquipoMaraton(nombre, universidad, lenguaje)
+            self.equipos.append(new)
+
+
+            self.lista_equipos.insert(interfaz.END, nombre)
+
+            self.entrada_nombre.delete(0, interfaz.END)
+            self.entrada_universidad.delete(0, interfaz.END)
+            self.entrada_lenguaje.delete(0, interfaz.END)
+
+            self.estado_crear_equipo.config(text = 'Equipo creado exitosamente')
+
+
+        except ValueError as e:
+            self.estado_crear_equipo.config(text = f'Error: {e}')
+
+    def mostrar_equipo(self, evento):
+
+        seleccion = self.lista_equipos.curselection()
+        if not seleccion:
+            return
+        self.entry_name.delete(0, interfaz.END)
+        self.entry_apellido.delete(0, interfaz.END)
+        indice = seleccion[0]
+        equipo = self.equipos[indice]
+        self.mostrar_nombre.config(text = f' Nombre: {equipo.name}')
+        self.mostrar_universidad.config(text = f' Universidad: {equipo.university}')
+        self.mostrar_lenguaje.config(text = f' Lenguaje: {equipo.language}')
+        self.mostrar_integrantes.config(text = f' Integrantes: {len(equipo.developers)}')
+        self.mostrar_programadores(equipo)
+
+    def mostrar_programadores(self, equipo):
+        self.primerint.config(text = "")
+        self.segundoint.config(text = "")
+        self.tercerint.config(text = "")
+        self.estado_anadir.config(text = '')
+        if len(equipo.developers) > 0:
+            self.integrantes.config(text = 'Integrantes')
+            self.primerint.config(text = f'1. {equipo.developers[0]}')
+            if len(equipo.developers) > 1:
+                self.segundoint.config(text = f'2. {equipo.developers[1]}')
+                if len(equipo.developers) == 3:
+                    self.frame_anadir.grid_remove()
+                    self.tercerint.config(text = f'3. {equipo.developers[2]}')
+
+        elif len(equipo.developers) == 0:
+            self.integrantes.config(text = 'Sin integrantes aun')
+
+        if not equipo.lleno():
+            self.frame_anadir.grid(row = 6 + len(equipo.developers), column = 3, columnspan = 3, padx = 5, pady = 5, sticky = 'w')
+
+    def anadir_integrante(self):
+        try:
+            name = campo(self.entry_name.get())
+            second_name = campo(self.entry_apellido.get())
+            new_dev = f'{name} {second_name}'
+            seleccion = self.lista_equipos.curselection()
+            if not seleccion:
+                return
+            indice = seleccion[0]
+            equipo = self.equipos[indice]
+            self.entry_name.delete(0, interfaz.END)
+            self.entry_apellido.delete(0, interfaz.END)
+
+            equipo.anadir_programador(new_dev)
+            self.estado_anadir.config(text = f'Añadido exitosamente')
+
+            self.mostrar_equipo(None)
+
+        except ValueError as e:
+            self.estado_anadir.config(text = f'Error: {e}')
+
+
+run = Interfaz()
