@@ -1,0 +1,107 @@
+import tkinter as interfaz
+class PruebaExcepcion:
+    def __init__(self, numerador, denominador, texto):
+        self.numerador = numerador
+        self.denominador = denominador
+        self.texto = texto
+
+    def division(self):
+
+        resultado = float(self.numerador.strip()) / float(self.denominador.strip())
+
+        return round(resultado, 7)
+
+
+    def validar_texto(self):
+        try:
+            if self.texto.strip() == "":
+                raise ValueError(f'Error: cadena vacia')
+
+            for i in self.texto.strip():
+                if i.isdigit():
+                    raise ValueError(f'Error: cadena con digitos')
+            return f'Texto valido'
+
+        except ValueError as e:
+            return f'{e}'
+
+class InterfazGrafica:
+    def __init__(self):
+
+
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.geometry(f'300x400')
+        self.ventana_principal.resizable(False, False)
+
+
+        self.ventana_principal.rowconfigure(0, minsize=20)
+        self.ventana_principal.columnconfigure(0, minsize=20)
+
+        self.texto_numerador = interfaz.Label(self.ventana_principal, text = 'Numerador:')
+        self.texto_numerador.grid(row = 1, column = 1, padx = 5, pady = 5 )
+        self.entrada_numerador = interfaz.Entry(self.ventana_principal)
+        self.entrada_numerador.grid(row = 1, column = 2, padx = 5, pady = 5)
+
+        self.texto_denominador = interfaz.Label(self.ventana_principal, text = 'Denominador:')
+        self.texto_denominador.grid(row = 2, column = 1, padx = 5, pady = 5)
+        self.entrada_denominador = interfaz.Entry(self.ventana_principal)
+        self.entrada_denominador.grid(row = 2, column = 2, padx = 5, pady = 5)
+
+        self.texto_resultado = interfaz.Label(self.ventana_principal, text = 'Resultado:')
+        self.texto_resultado.grid(row = 3, column = 1, padx = 5, pady = 5)
+        self.mostrar_resultado = interfaz.Label(self.ventana_principal)
+        self.mostrar_resultado.grid(row = 3, column = 2, padx = 5, pady = 5)
+
+
+        self.texto_texto = interfaz.Label(self.ventana_principal, text = 'Texto:')
+        self.texto_texto.grid(row = 4, column = 1, padx = 5, pady = 5)
+        self.entrada_texto = interfaz.Entry(self.ventana_principal)
+        self.entrada_texto.grid(row = 4, column = 2, padx = 5, pady = 5)
+
+        self.ventana_principal.rowconfigure(5, minsize=20)
+
+        self.boton_calcular = interfaz.Button(self.ventana_principal, text = 'Calcular', command = self.main)
+        self.boton_calcular.grid(row = 6, column = 1, padx = 5, pady = 5)
+
+        self.boton_limpiar = interfaz.Button(self.ventana_principal, text = 'Limpiar', command = self.limpiar)
+        self.boton_limpiar.grid(row = 6, column = 2, padx = 5, pady = 5)
+
+        self.ventana_principal.rowconfigure(7, minsize=20)
+
+        self.estado_division = interfaz.Label(self.ventana_principal, text = '')
+        self.estado_division.grid(row = 8, column = 1, columnspan = 4, padx = 5, pady = 5, sticky = 'w' )
+
+        self.estado_texto = interfaz.Label(self.ventana_principal, text = '')
+        self.estado_texto.grid(row = 9, column = 1, columnspan = 4, padx = 5, pady = 5, sticky = 'w' )
+
+
+        self.ventana_principal.mainloop()
+
+
+    def limpiar(self):
+        self.entrada_numerador.delete(0, interfaz.END)
+        self.entrada_denominador.delete(0, interfaz.END)
+        self.mostrar_resultado.config(text = '')
+        self.entrada_texto.delete(0, interfaz.END)
+
+        self.estado_texto.config(text = '')
+        self.estado_division.config(text = 'Limpiado exitoso')
+
+    def main(self):
+        numerador = self.entrada_numerador.get()
+        denominador = self.entrada_denominador.get()
+        texto = self.entrada_texto.get()
+        datos = PruebaExcepcion(numerador, denominador, texto)
+
+        try:
+            resultado = datos.division()
+            self.mostrar_resultado.config(text = f'{resultado}')
+            self.estado_division.config(text ='Division Valida')
+
+        except ZeroDivisionError:
+            self.estado_division.config(text = f'Error: division por cero')
+        except ValueError:
+            self.estado_division.config(text = f'Error: valor no numerico')
+        self.estado_texto.config(text = f'{datos.validar_texto()}')
+
+x = InterfazGrafica()
