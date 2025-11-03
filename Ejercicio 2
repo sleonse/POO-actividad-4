@@ -1,0 +1,44 @@
+import tkinter as tk
+from tkinter import messagebox
+class Vendedor:
+    def __init__(self,ventana):
+        self.ventana = ventana
+        self.ventana.title("Vendedor")
+
+        tk.Label(ventana, text="Vendedor", font= ("Helvetica", 12, "italic")).grid(row=0, column=0,pady=(10,10))
+        tk.Label(ventana, text="Nombre: ").grid(row=1, column=0, padx= 10, pady = 5)
+        self.nombreVendedor = tk.Entry(ventana)
+        self.nombreVendedor.grid(row=1, column= 1, padx=10, pady= 10)
+
+        tk.Label(ventana, text="Apellidos").grid(row=2, column=0, padx= 10, pady= 5)
+        self.apellidoVendedor = tk.Entry(ventana)
+        self.apellidoVendedor.grid(row=2, column= 1, padx=10, pady= 10)
+
+        tk.Label(ventana, text = "Edad Vendedor").grid(row=3, column =0, padx = 10, pady=5)
+        self.edadVendedor = tk.Entry(ventana)
+        self.edadVendedor.grid(row=3, column= 1, padx=10, pady= 10)
+        tk.Button(ventana, text ="Crear Vendedor", command= self.revisarEdad).grid(row=4, column=1, padx= 10, pady=10)
+        tk.Button(ventana, text="Limpiar campos", command=self.limpiarCampos).grid(row=4, column=1, padx=10, pady=10)
+    def revisarEdad(self):
+        try:
+            nombre = self.nombreVendedor.get()
+            apellido = self.apellidoVendedor.get()
+            edad = int(self.edadVendedor.get())
+            if edad <=0 or edad >= 120:
+                raise ValueError("La edad no puede ser negativa ni mayor a 120")
+            if edad < 18:
+              raise ValueError("La edad del vendedor tiene que ser mayor a 18 años")
+
+            messagebox.showinfo("Éxito", f"Vendedor {nombre} {apellido} registrado correctamente.")
+
+        except:
+               messagebox.showerror("Error","Ingrese valores correctos")
+    def limpiarCampos(self):
+        self.nombreVendedor.delete(0, tk.END)
+        self.apellidoVendedor.delete(0, tk.END)
+        self.edadVendedor.delete(0, tk.END)
+if __name__ == "__main__":
+    ventana = tk.Tk()
+    app = Vendedor(ventana)
+    print()
+    ventana.mainloop()
