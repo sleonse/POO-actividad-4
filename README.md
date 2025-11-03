@@ -1,3 +1,3 @@
 # POO-actividad-4
-Juan Camilo Lopez Lopez
+Integrantes: Juan Camilo Lopez Lopez y 
 Samuel Leon Serna
