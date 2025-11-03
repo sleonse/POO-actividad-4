@@ -1,0 +1,76 @@
+import os
+def leerarchivo(nombre):
+    ruta = os.path.join(os.path.dirname(__file__), nombre)
+    cont = []
+    with open(ruta, 'r') as archivo:
+        for linea in archivo:
+            cont.append(linea.strip())
+    return Archivo(nombre, cont)
+
+class Archivo:
+    def __init__(self, nombre_archivo, contenido):
+        self.nombre_archivo = nombre_archivo
+        self.contenido = contenido
+
+
+import tkinter as tk
+
+class ventana_principal:
+    def __init__(self):
+        self.ventana = tk.Tk()
+        self.ventana.geometry("350x500")
+        self.ventana.resizable(False, False)
+        self.ventana.columnconfigure(0, minsize=60)
+        self.ventana.columnconfigure(1, minsize=60)
+        self.ventana.columnconfigure(2, minsize=60)
+        self.ventana.rowconfigure(3, weight=1)
+        for i in range(4, 14):
+            self.ventana.rowconfigure(i, weight=1)
+        self.texto_archivo = tk.Label(self.ventana, text = "Archivo:")
+        self.entrada_archivo = tk.Entry(self.ventana)
+        self.texto_archivo.grid(row = 0, column = 1, padx = 5, pady = 5, sticky = 'nsew')
+        self.entrada_archivo.grid(row = 0, column = 2, padx = 5, pady = 5, sticky = 'nsew')
+
+        self.boton_mostrar_archivo = tk.Button(self.ventana, text = 'Mostrar', command = self.mostrar)
+        self.boton_limpiar = tk.Button(self.ventana, text = 'Limpiar', command = self.limpiar)
+        self.boton_mostrar_archivo.grid(row = 1, column = 2, padx = 5, pady = 5, sticky = 'nsew')
+        self.boton_limpiar.grid(row = 1, column = 1, padx = 5, pady = 5, sticky = 'nsew')
+
+        self.texto_estado = tk.Label(self.ventana, text = '')
+        self.texto_estado.grid(row = 2, column = 1, columnspan = 2, padx = 5, pady = 5, sticky = 'nsew')
+
+        self.frame = tk.Frame(self.ventana, bg='lightgray')
+        self.frame.grid(row = 3, column = 1, padx = 5, pady = 5, columnspan = 3, rowspan = 10, sticky = 'nsew')
+
+
+        self.ventana.mainloop()
+
+    def mostrar(self):
+        arc = self.entrada_archivo.get()
+        if arc:
+            try:
+                archivo = leerarchivo(arc)
+
+                for i in archivo.contenido:
+                    print(i)
+                for widget in self.frame.winfo_children():
+                    widget.destroy()
+                for line in archivo.contenido:
+                    label = tk.Label(self.frame, text = f'{line}')
+                    label.pack()
+            except FileNotFoundError:
+                self.texto_estado.config(text = 'Archivo no encontrado')
+            except Exception as e:
+                self.texto_estado.config(text = f'error: {e}')
+        else:
+            self.texto_estado.config(text = 'Ingrese el nombre del archivo')
+
+    def limpiar(self):
+        for widget in self.frame.winfo_children():
+            widget.destroy()
+        self.texto_estado.config(text = 'Limpiado exitoso')
+
+
+
+
+windom = ventana_principal()
